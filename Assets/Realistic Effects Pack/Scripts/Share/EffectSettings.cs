@@ -39,7 +39,7 @@ public class EffectSettings : MonoBehaviour
 		}
 		var handler = CollisionEnter;
 		if (handler != null)
-			handler(this, e);
+			handler(this ,e);
 		if (DeactivateAfterCollision && !deactivatedIsWait)
 		{
 			deactivatedIsWait = true;
@@ -111,6 +111,7 @@ public class EffectSettings : MonoBehaviour
 		inactive_value[lastInactiveIndex] = time;
 		++lastInactiveIndex;
 	}
+
 }
 
 public class CollisionInfo : EventArgs

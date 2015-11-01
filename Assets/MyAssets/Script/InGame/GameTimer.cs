@@ -66,6 +66,8 @@ public class GameTimer : MonoBehaviour
     private UILabel lbl_gameTimer;
     private Vector3 originLabelScale;
     private GameTime gameTime;
+
+    private bool isGameStop = false;
     
     /// <summary>
     /// GameTime 애니메이션 발생간격( sec % SEC_ANIMATE )
@@ -77,6 +79,10 @@ public class GameTimer : MonoBehaviour
         originLabelScale = lbl_gameTimer.gameObject.transform.localScale;
 
         gameTime.InitTime();
+        StartCoroutine(GameTimeProcess());
+    }
+    public void ReStartTimer()
+    {
         StartCoroutine(GameTimeProcess());
     }
 
@@ -114,6 +120,8 @@ public class GameTimer : MonoBehaviour
     {
         while(true)
         {
+            if (isGameStop == true) break;
+ 
             gameTime.AddMilliSeconds(1);
             lbl_gameTimer.text = gameTime.ToStringType();
 
@@ -122,6 +130,11 @@ public class GameTimer : MonoBehaviour
 
             yield return new WaitForSeconds(0.0001f);
         }
+    }
+
+    public void SetGameState(bool _state)
+    {
+        isGameStop = _state;
     }
 
 }

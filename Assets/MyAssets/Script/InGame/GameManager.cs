@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour {
     private UILabel lbl_gameStartTimer;
     private float countTime = 3.0f;
 
+    [SerializeField]
+    private UI_Menu ui_Menu;
+
 	// Use this for initialization
 	void Start () {
 
@@ -21,6 +24,17 @@ public class GameManager : MonoBehaviour {
     {
         gameTimer.StartTimer();
         misGenerator.StartMisProcess();
+    }
+    public void GameStop()
+    {
+        ui_Menu.OpenMenu();
+        gameTimer.SetGameState(true);
+    }
+    public void GameReStart()
+    {
+        ui_Menu.CloseMenu();
+        gameTimer.SetGameState(false);
+        gameTimer.ReStartTimer();
     }
 
     IEnumerator GameStartCounter()

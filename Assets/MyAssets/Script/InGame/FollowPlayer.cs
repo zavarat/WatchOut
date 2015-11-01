@@ -3,7 +3,9 @@ using System.Collections;
 
 public class FollowPlayer : MonoBehaviour {
 
-    public Transform target;
+    [SerializeField]
+    private Transform playerTransform;
+    
     public float upDistance = 7.0f;
     public float backDistance = 10.0f;
     public float trackingSpeed = 3.0f;
@@ -12,16 +14,12 @@ public class FollowPlayer : MonoBehaviour {
     private Vector3 v3To;
     private Quaternion qTo;
 
-    private Vector3 dirVec;
-
     void LateUpdate()
     {
-        dirVec = target.position - transform.position;
-        dirVec.Normalize();
-
-        v3To = target.position - dirVec * backDistance + target.up * upDistance;
+        
+        v3To = playerTransform.position - playerTransform.forward * backDistance + playerTransform.up * upDistance;
         transform.position = Vector3.Lerp(transform.position, v3To, trackingSpeed * Time.deltaTime);
-        qTo =  Quaternion.LookRotation(target.position - transform.position, target.up);
+        qTo = Quaternion.LookRotation(playerTransform.position - transform.position, playerTransform.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, qTo, rotationSpeed * Time.deltaTime);
     }
 	

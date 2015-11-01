@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MenuManager : MonoBehaviour {
 
-    private int domeSkyNum = 0;
+    
 
     [SerializeField]
     private GameObject factedDomeSky0;
@@ -19,10 +19,13 @@ public class MenuManager : MonoBehaviour {
     private GameObject factedDomeSky5;
 
     private GameObject[] factedDomeSkies = new GameObject[6];
-   
+    private int domeSkyNum = 0;
+
+    private int mapNum = 0;
 
     public void Start()
     {
+        // 배경 sphere를 랜덤으로 선택.
         domeSkyNum = Random.Range(0, 5);
         factedDomeSkies[0] = factedDomeSky0;
         factedDomeSkies[1] = factedDomeSky1;
@@ -36,7 +39,9 @@ public class MenuManager : MonoBehaviour {
 
     public void StartGame()
     {
-        Application.LoadLevelAsync("InGame");
+        mapNum = Random.Range(0, 6);
+        //Application.LoadLevelAsync("InGame_Map" + mapNum);
+        Application.LoadLevelAsync("InGame_Map0");
     }
 }
 

@@ -19,10 +19,12 @@ public class TestJoyStick : MonoBehaviour {
     private Ray screenToTouch;
     private RaycastHit rayCastHit;
 
-    private float moveSpeed = 10.0f;
+    private float moveSpeed = 3.0f;
 
     private Vector2 backJoyStick_center;
     private Vector2 endTouchPos;
+
+    private Animator playerAnimator;
 
     [SerializeField]
     private UILabel lbl_debug;
@@ -31,11 +33,15 @@ public class TestJoyStick : MonoBehaviour {
     {
         originJoyStickPos = joyStick_Front.transform.position;
         backJoyStick_center = ui_Camera.WorldToScreenPoint(joyStick_Back.transform.position);
-	}
+
+        playerAnimator = gameObject.GetComponent<Animator>();
+    }
 
 
 	void FixedUpdate () 
     {
+        
+
         if (Input.touchCount == 0) return;
 
         screenToTouch = ui_Camera.ScreenPointToRay(Input.GetTouch(0).position);
@@ -88,6 +94,12 @@ public class TestJoyStick : MonoBehaviour {
         }
     }
 
+    private void TestRotation(Vector3 _dirVector)
+    {
+        Quaternion rotationDir = Quaternion.LookRotation(_dirVector, transform.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotationDir, 3.0f * Time.deltaTime);
+    }
+
     
     private void MoveChacracter()
     {
@@ -101,45 +113,53 @@ public class TestJoyStick : MonoBehaviour {
             if(((angle >= 0.0f) && (angle < 15.0f)) || ((angle <= 0.0f) && (angle > 345.0f)))
             {
                 //EAST direction
+                //dirVector = playerObject.transform.right;
                 dirVector = playerObject.transform.right;
+                TestRotation(dirVector);
             }
             else if ((angle >= 15.0f) && (angle < 75.0f))
             {
                 // North East direction
                 dirVector = playerObject.transform.right + playerObject.transform.forward;
+                TestRotation(dirVector);
             }
             else if ((angle >= 75.0f) && (angle < 105.0f))
             {
                 // North direction
                 dirVector = playerObject.transform.forward;
+                TestRotation(dirVector);
             }
             else if ((angle >= 105.0f) && (angle < 165.0f))
             {
                 // North West direction
                 dirVector = (-playerObject.transform.right) + playerObject.transform.forward;
+                TestRotation(dirVector);
             }
             else if(((angle >= 180.0f) && (angle < 195.0f)) || ((angle <= 180.0f) && (angle > 165.0f)))
             {
                 // West direction
                 dirVector = -playerObject.transform.right;
+                TestRotation(dirVector);
             }
             else if ((angle >= 195.0f) && (angle < 265.0f))
             {
                 // South West direction
                 dirVector = (-playerObject.transform.right) + (-playerObject.transform.forward);
+                TestRotation(dirVector);
             }
             else if ((angle >= 265.0f) && (angle < 295.0f))
             {
                 //South direction
                 dirVector = -playerObject.transform.forward;
+                TestRotation(dirVector);
             }
             else if ((angle >= 295.0f) && (angle < 360.0f))
             {
                 //South East direction
                 dirVector = playerObject.transform.right + (-playerObject.transform.forward);
+                TestRotation(dirVector);
             }
-
-            RotationCharacter();
+            playerAnimator.Play("Running@loop", 0);
             playerRb.MovePosition(playerObject.transform.position + dirVector *Time.deltaTime * moveSpeed);
         }
     }

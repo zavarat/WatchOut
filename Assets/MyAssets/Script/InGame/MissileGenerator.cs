@@ -35,10 +35,11 @@ public class MissileGenerator : MonoBehaviour {
             missileList[idx].SetActive(false);
 
             EffectSettings settings = missileList[idx].GetComponent<EffectSettings>();
-            settings.MoveSpeed = Random.RandomRange(1.0f, 5.0f);
+            settings.MoveSpeed = Random.RandomRange(1.0f, 8.0f);
             settings.Target = missileTarget;
             settings.CollisionEnter += (n, e) =>
                 {
+                    // to do
                 };
         }
     }

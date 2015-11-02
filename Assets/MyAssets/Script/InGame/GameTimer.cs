@@ -67,7 +67,7 @@ public class GameTimer : MonoBehaviour
     private Vector3 originLabelScale;
     private GameTime gameTime;
 
-    private bool isGameStop = false;
+    private GAME_TIME_STATE curTimeState = GAME_TIME_STATE.TIME_GO;
     
     /// <summary>
     /// GameTime 애니메이션 발생간격( sec % SEC_ANIMATE )
@@ -120,7 +120,7 @@ public class GameTimer : MonoBehaviour
     {
         while(true)
         {
-            if (isGameStop == true) break;
+            if (curTimeState == GAME_TIME_STATE.TIME_END) break;
  
             gameTime.AddMilliSeconds(1);
             lbl_gameTimer.text = gameTime.ToStringType();
@@ -132,9 +132,16 @@ public class GameTimer : MonoBehaviour
         }
     }
 
-    public void SetGameState(bool _state)
+
+    public enum GAME_TIME_STATE { TIME_END, TIME_GO }
+
+    /// <summary>
+    /// Setting Game Stop / Go state
+    /// </summary>
+    /// <param name="_timeState"> </param>
+    public void SetGameTimeState(GAME_TIME_STATE _timeState)
     {
-        isGameStop = _state;
+        curTimeState = _timeState;
     }
 
 }

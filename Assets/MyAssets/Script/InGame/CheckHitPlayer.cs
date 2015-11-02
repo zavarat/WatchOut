@@ -17,8 +17,10 @@ public class CheckHitPlayer : MonoBehaviour {
 
 	public void HittingPlayer()
     {
-        playerAnimator.Play("GoDown", 0);
+        playerAnimator.SetBool("playerHit", true);
+        playerAnimator.Play("Damaged@loop", 0);
         playerAnimator.Play("damaged@sd_hmd", 1);
+        
     }
 
     public void OnCollisionEnter(Collision collision)

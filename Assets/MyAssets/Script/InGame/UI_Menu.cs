@@ -21,9 +21,12 @@ public class UI_Menu : MonoBehaviour {
 
     private bool isFlickering = true;
 
+    [SerializeField]
+    private GameTimer gameTimer;
+
     public void OpenMenu()
     {
-
+        
         menuObj.SetActive(true);
         spr_menuBg.alpha = 0.7f;
         spr_cancle.alpha = 0.7f;
@@ -44,6 +47,8 @@ public class UI_Menu : MonoBehaviour {
 
     public void OpenGameOver()
     {
+        gameTimer.SetGameTimeState(GameTimer.GAME_TIME_STATE.TIME_END);
+
         gameOverObj.SetActive(true);
         spr_gameOverBg.alpha = 0.7f;
 

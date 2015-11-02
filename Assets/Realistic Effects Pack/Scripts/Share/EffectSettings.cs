@@ -26,6 +26,7 @@ public class EffectSettings : MonoBehaviour
 	private int currentActiveGo;
 	private int currentInactiveGo;
 	private bool deactivatedIsWait;
+
 	
 	public void OnCollisionHandler(CollisionInfo e)
 	{

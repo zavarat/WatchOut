@@ -70,14 +70,17 @@ public class TestJoyStick : MonoBehaviour {
                 {
                     endTouchPos = Input.GetTouch(0).position;
                     joyStick_Front.transform.position = originJoyStickPos;
+                    playerAnimator.SetBool("playerRunStop", true);
                 }
                 break;
             case TouchPhase.Canceled:
                 {
                     joyStick_Front.transform.position = originJoyStickPos;
+                    playerAnimator.SetBool("playerRunStop", true);
                 }
                 break;
         }
+
 	}
 
     /// <summary>

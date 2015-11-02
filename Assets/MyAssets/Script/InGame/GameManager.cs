@@ -28,12 +28,12 @@ public class GameManager : MonoBehaviour {
     public void GameStop()
     {
         ui_Menu.OpenMenu();
-        gameTimer.SetGameState(true);
+        gameTimer.SetGameTimeState(GameTimer.GAME_TIME_STATE.TIME_END);
     }
     public void GameReStart()
     {
         ui_Menu.CloseMenu();
-        gameTimer.SetGameState(false);
+        gameTimer.SetGameTimeState(GameTimer.GAME_TIME_STATE.TIME_GO);
         gameTimer.ReStartTimer();
     }
 

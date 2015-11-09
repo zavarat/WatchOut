@@ -35,6 +35,7 @@ public class MenuManager : MonoBehaviour {
         factedDomeSkies[5] = factedDomeSky5;
 
         Instantiate(factedDomeSkies[domeSkyNum], new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        PlayerPrefs.SetInt("domeSkyNum", domeSkyNum);
     }
 
     public void StartGame()

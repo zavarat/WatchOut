@@ -19,7 +19,8 @@ public class TestJoyStick : MonoBehaviour {
     private Ray screenToTouch;
     private RaycastHit rayCastHit;
 
-    private float moveSpeed = 3.0f;
+    //player move Speed
+    private float moveSpeed = 4.5f;
 
     private Vector2 backJoyStick_center;
     private Vector2 endTouchPos;
@@ -27,7 +28,9 @@ public class TestJoyStick : MonoBehaviour {
     private Animator playerAnimator;
 
     [SerializeField]
-    private UILabel lbl_debug;
+    private UILabel lbl_debugForAngle;
+
+    private bool isPlayerGround;
 
 	void Start () 
     {
@@ -35,12 +38,13 @@ public class TestJoyStick : MonoBehaviour {
         backJoyStick_center = ui_Camera.WorldToScreenPoint(joyStick_Back.transform.position);
 
         playerAnimator = gameObject.GetComponent<Animator>();
+
+        isPlayerGround = true;
     }
 
 
 	void FixedUpdate () 
     {
-        
 
         if (Input.touchCount == 0) return;
 
@@ -55,6 +59,7 @@ public class TestJoyStick : MonoBehaviour {
                 break;
             case TouchPhase.Moved:
                 {
+                    playerAnimator.SetBool("playerRunStop", false);
                     endTouchPos = Input.GetTouch(0).position;
                     TrackingTouchPoint(endTouchPos);
                     MoveChacracter();
@@ -62,6 +67,7 @@ public class TestJoyStick : MonoBehaviour {
                 break;
             case TouchPhase.Stationary:
                 {
+                    playerAnimator.SetBool("playerRunStop", false);
                     MoveChacracter();
                 }
                 break;
@@ -83,14 +89,35 @@ public class TestJoyStick : MonoBehaviour {
 
 	}
 
-    /// <summary>
+    private float jumpSpeed = 300.0f;
+    public void CharacterJump()
+    {
+        if(isPlayerGround == true)
+        {
+            playerAnimator.SetBool("playerJumping", true);
+            playerRb.AddForce(playerObject.transform.up * jumpSpeed);
+            isPlayerGround = false;
+        }
+    }
+    // player 지면보다 위에 있는지 확인한다.
+    public void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Planet"))
+        {
+            isPlayerGround = true;
+            playerAnimator.SetBool("playerJumping", false);
+            
+        }
+    }
+
+    /// <summary> 
     ///  joystick tracking touched point
     /// </summary>
     /// <param name="_touchPosition"></param>
     private void TrackingTouchPoint(Vector2 _touchPosition)
     {
         if ((Physics.Raycast(screenToTouch, out rayCastHit)) &&
-            (rayCastHit.collider.gameObject.tag == "JoyStick_Back"))
+            (rayCastHit.collider.gameObject.CompareTag("JoyStick_Back")))
         {
             Vector3 endPos = ui_Camera.ScreenToWorldPoint(_touchPosition);
             joyStick_Front.transform.position = Vector3.Lerp(joyStick_Front.transform.position, endPos, 0.5f);
@@ -107,12 +134,12 @@ public class TestJoyStick : MonoBehaviour {
     private void MoveChacracter()
     {
         if ((Physics.Raycast(screenToTouch, out rayCastHit)) &&
-            (rayCastHit.collider.gameObject.tag == "JoyStick_Back"))
+            (rayCastHit.collider.gameObject.CompareTag("JoyStick_Back")))
         {
             Vector3 dirVector = Vector3.zero;
             float angle = GetBetweenAngle();
             //debug-test code
-            lbl_debug.text = angle.ToString();
+            lbl_debugForAngle.text = angle.ToString();
             if(((angle >= 0.0f) && (angle < 15.0f)) || ((angle <= 0.0f) && (angle > 345.0f)))
             {
                 //EAST direction
@@ -162,7 +189,7 @@ public class TestJoyStick : MonoBehaviour {
                 dirVector = playerObject.transform.right + (-playerObject.transform.forward);
                 TestRotation(dirVector);
             }
-            playerAnimator.Play("Running@loop", 0);
+            if (isPlayerGround == true) playerAnimator.Play("Running@loop", 0);
             playerRb.MovePosition(playerObject.transform.position + dirVector *Time.deltaTime * moveSpeed);
         }
     }

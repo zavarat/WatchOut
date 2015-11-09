@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 
+[Serializable]
 public struct GameTime
 {
     int milliseconds;
@@ -14,6 +15,7 @@ public struct GameTime
         milliseconds = 0;
         seconds = 0;
         minutes = 0;
+        strBuffer = "00:00:00";
     }
 
     public void AddMinutes(int _min) { minutes += _min; }
@@ -52,7 +54,7 @@ public struct GameTime
         else strBuffer += "0" + seconds.ToString();
         strBuffer += ":";
 
-        if (milliseconds >= 10) strBuffer += milliseconds.ToString();
+        if (milliseconds >=10) strBuffer += milliseconds.ToString();
         else strBuffer += "0" + milliseconds.ToString();
 
         return strBuffer;
@@ -73,6 +75,9 @@ public class GameTimer : MonoBehaviour
     /// GameTime 애니메이션 발생간격( sec % SEC_ANIMATE )
     /// </summary>
     private const int SEC_ANIMATE = 5;
+
+    public GameTime GetGameTimeInfo() { return gameTime; }
+    public string GetGameTimeString() { return lbl_gameTimer.text; }
 
     public void StartTimer()
     {
@@ -120,13 +125,13 @@ public class GameTimer : MonoBehaviour
     {
         while(true)
         {
-            if (curTimeState == GAME_TIME_STATE.TIME_END) break;
+            if (curTimeState.Equals(GAME_TIME_STATE.TIME_END)) break;
  
             gameTime.AddMilliSeconds(1);
             lbl_gameTimer.text = gameTime.ToStringType();
 
             int sec = gameTime.GetSeconds();
-            if ((sec > 0) && (sec % SEC_ANIMATE == 0)) StartCoroutine(LblAnimaition());
+            if ( (sec.Equals(0)) && ((sec % SEC_ANIMATE).Equals(0)) ) StartCoroutine(LblAnimaition());
 
             yield return new WaitForSeconds(0.0001f);
         }

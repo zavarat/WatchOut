@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+[ExecuteInEditMode]
 public class FollowPlayer : MonoBehaviour {
 
     [SerializeField]
     private Transform playerTransform;
     
     public float upDistance = 7.0f;
-    public float backDistance = 10.0f;
+    public float backDistance = 5.0f;
     public float trackingSpeed = 3.0f;
     public float rotationSpeed = 9.0f;
 
     private Vector3 v3To;
     private Quaternion qTo;
 
+    
     void LateUpdate()
     {
         

@@ -14,10 +14,32 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private UI_Menu ui_Menu;
 
+    [SerializeField]
+    private GameObject factedDomeSky0;
+    [SerializeField]
+    private GameObject factedDomeSky1;
+    [SerializeField]
+    private GameObject factedDomeSky2;
+    [SerializeField]
+    private GameObject factedDomeSky3;
+    [SerializeField]
+    private GameObject factedDomeSky4;
+    [SerializeField]
+    private GameObject factedDomeSky5;
+    private GameObject[] factedDomeSkies = new GameObject[6];
+
 	// Use this for initialization
 	void Start () {
-
+        factedDomeSkies[0] = factedDomeSky0;
+        factedDomeSkies[1] = factedDomeSky1;
+        factedDomeSkies[2] = factedDomeSky2;
+        factedDomeSkies[3] = factedDomeSky3;
+        factedDomeSkies[4] = factedDomeSky4;
+        factedDomeSkies[5] = factedDomeSky5;
+        Instantiate(factedDomeSkies[PlayerPrefs.GetInt("domeSkyNum")], new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        
         StartCoroutine(GameStartCounter());
+        StartCoroutine(GameLevelController());
 	}
 
     public void GameStart()
@@ -35,6 +57,25 @@ public class GameManager : MonoBehaviour {
         ui_Menu.CloseMenu();
         gameTimer.SetGameTimeState(GameTimer.GAME_TIME_STATE.TIME_GO);
         gameTimer.ReStartTimer();
+    }
+
+    IEnumerator GameLevelController()
+    {
+        float curGameTimeSec = gameTimer.GetGameTimeInfo().GetSeconds();
+        while(true)
+        {
+            if((curGameTimeSec >= 10) && ( curGameTimeSec <= 13))
+            {
+                misGenerator.StartLevel1();
+            }
+            if ((curGameTimeSec >= 30) && (curGameTimeSec <= 33))
+            {
+                misGenerator.StartLevel2();
+            }
+
+            curGameTimeSec = gameTimer.GetGameTimeInfo().GetSeconds();
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 
     IEnumerator GameStartCounter()

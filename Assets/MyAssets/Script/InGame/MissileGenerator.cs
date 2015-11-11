@@ -17,8 +17,6 @@ public class MissileGenerator : MonoBehaviour {
     private GameObject homingMisSlow;
     [SerializeField]
     private GameObject homingMisNormal;
-    [SerializeField]
-    private GameObject homingMisFast;
 
     [SerializeField]
     private GameObject targetPlanet;
@@ -94,7 +92,33 @@ public class MissileGenerator : MonoBehaviour {
             sfx.mute = _flag;
         }
     }
-    
+    public void StartMisProcess() { StartCoroutine(RePositioningMis()); }
+    IEnumerator RePositioningMis()
+    {
+        while (true)
+        {
+            missileMaxNum = missileList.Count;
+            for (int idx = 0; idx < missileMaxNum; ++idx)
+                if (missileList[idx].activeSelf == false)
+                {
+                    missileList[idx].transform.position = positionGroup[Random.Range(1, posGroupLength)].position;
+                    missileList[idx].SetActive(true);
+                    AudioSource sfx = missileList[idx].GetComponent<AudioSource>();
+                    sfx.clip = frozenMeteoSfx;
+                    sfx.volume = 0.3f;
+                    sfx.PlayDelayed(0.35f);
+                }
+
+            yield return new WaitForSeconds(0.25f);
+        }
+    }
+
+
+    /*
+     // 게임 내 난이도를 설정하는 메소드 선언부분 시작.
+     // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+     //
+     */
 
     bool isStartLevel1 = false;
     public void StartLevel1()
@@ -102,7 +126,8 @@ public class MissileGenerator : MonoBehaviour {
         if (isStartLevel1 == true) return;
 
         int elementNum = 0;
-        for(int idx = 0; idx <=2; idx++)
+        int homingMisNum = 1;
+        for (int idx = 0; idx < homingMisNum; idx++)
         {
             elementNum = Random.Range(0, 20);
             GameObject deleteObj = missileList[elementNum];
@@ -115,7 +140,7 @@ public class MissileGenerator : MonoBehaviour {
 
 
             EffectSettings settings = missileList[elementNum].GetComponent<EffectSettings>();
-            settings.MoveSpeed = 1.7f;
+            settings.MoveSpeed = 2.0f;
             settings.Target = targetPlayer;
             
         }
@@ -127,7 +152,8 @@ public class MissileGenerator : MonoBehaviour {
         if (isStartLevel2 == true) return;
 
         int elementNum = 0;
-        for (int idx = 0; idx <= 4; idx++)
+        int homingMisNum = 3;
+        for (int idx = 0; idx < homingMisNum; idx++)
         {
             elementNum = Random.Range(0, 20);
             GameObject deleteObj = missileList[elementNum];
@@ -148,33 +174,46 @@ public class MissileGenerator : MonoBehaviour {
     bool isStartLevel3 = false;
     public void StartLevel3()
     {
+        if (isStartLevel3 == true) return;
 
-    }
-    
-
-    public void StartMisProcess()
-    {
-        StartCoroutine(RePositioningMis());
-    }
-
-    IEnumerator RePositioningMis()
-    {
-        while(true)
+        for (int idx = 0; idx < missileMaxNum; ++idx)
         {
-            missileMaxNum = missileList.Count;
-            for (int idx = 0; idx < missileMaxNum; ++idx)
-                if (missileList[idx].activeSelf == false)
-                {
-                    missileList[idx].transform.position = positionGroup[Random.Range(1, posGroupLength)].position;
-                    missileList[idx].SetActive(true);
-                    AudioSource sfx = missileList[idx].GetComponent<AudioSource>();
-                    sfx.clip = frozenMeteoSfx;
-                    sfx.volume = 0.3f;
-                    sfx.PlayDelayed(0.35f);
-                }
-
-                yield return new WaitForSeconds(0.25f);
+            EffectSettings settings = missileList[idx].GetComponent<EffectSettings>();
+            if(missileList[idx].gameObject.tag.Equals("DefaultMissile"))
+            {
+                settings.MoveSpeed = Random.RandomRange(7.0f, 10.5f);
+                settings.gameObject.transform.localScale = new Vector3(3.5f, 3.5f, 3.5f);
+            }
+            else if(missileList[idx].gameObject.tag.Equals("homingMis_slow"))
+            {
+                settings.MoveSpeed = Random.RandomRange(3.7f, 3.95f);
+            }
+            
         }
+
+        int elementNum = 0;
+        int homingMisNum = 6;
+        for (int idx = 0; idx < homingMisNum; idx++)
+        {
+            elementNum = Random.Range(0, 20);
+            GameObject deleteObj = missileList[elementNum];
+            DestroyImmediate(deleteObj);
+            GameObject createObj = Instantiate(homingMisNormal,
+                Vector3.zero,
+                Quaternion.identity) as GameObject;
+            missileList[elementNum] = createObj;
+            missileList[elementNum].transform.position = homingPosGroup[Random.Range(0, homingPosGroupLength)].position;
+
+            EffectSettings settings = missileList[elementNum].GetComponent<EffectSettings>();
+            settings.MoveSpeed = Random.Range(3.6f, 4.1f);
+            settings.Target = targetPlayer;
+
+        }
+
+        isStartLevel3 = true;
     }
+
+
+    
 
 }

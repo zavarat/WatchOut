@@ -7,17 +7,22 @@ public class GravityBody : MonoBehaviour {
     [SerializeField]
     private GravityAttractor planetGravity;
     [SerializeField]
-    private Rigidbody playerRd;
+    private Rigidbody bodyRd;
     
     void Awake()
     {
-        playerRd.useGravity = false;
-        playerRd.constraints = RigidbodyConstraints.FreezeRotation;
+        bodyRd.useGravity = false;
+        bodyRd.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     void FixedUpdate()
     {
         planetGravity.Attract(gameObject);
+    }
+
+    public void SetPlanetGravity(GravityAttractor _planetGravity)
+    {
+        planetGravity = _planetGravity;
     }
 
     

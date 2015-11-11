@@ -5,7 +5,7 @@ public class GravityAttractor : MonoBehaviour {
 
     public float gravity = -10f;
     
-    private Rigidbody playerRd;
+    private Rigidbody objectRd;
 
 
     float touchX;
@@ -18,8 +18,8 @@ public class GravityAttractor : MonoBehaviour {
         
         body.transform.rotation = Quaternion.FromToRotation(bodyUp, targetDir) * body.transform.rotation;
 
-        playerRd = body.GetComponent<Rigidbody>();
-        playerRd.AddForce(targetDir * gravity);
+        objectRd = body.GetComponent<Rigidbody>();
+        objectRd.AddForce(targetDir * gravity);
 
     }
 }

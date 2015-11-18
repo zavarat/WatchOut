@@ -21,16 +21,17 @@ public class TestJoyStick : MonoBehaviour {
 
     //player move Speed
     private float moveSpeed = 4.5f;
+    public void SetPlayerSpeed(float _speed) { moveSpeed = _speed; }
 
     private Vector2 backJoyStick_center;
     private Vector2 endTouchPos;
 
     private Animator playerAnimator;
 
-    [SerializeField]
-    private UILabel lbl_debugForAngle;
-
+    
     private bool isPlayerGround;
+
+    
 
 	void Start () 
     {
@@ -139,7 +140,6 @@ public class TestJoyStick : MonoBehaviour {
             Vector3 dirVector = Vector3.zero;
             float angle = GetBetweenAngle();
             //debug-test code
-            lbl_debugForAngle.text = angle.ToString();
             if(((angle >= 0.0f) && (angle < 15.0f)) || ((angle <= 0.0f) && (angle > 345.0f)))
             {
                 //EAST direction

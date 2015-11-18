@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class MissileGenerator : MonoBehaviour {
 
-    private int missileMaxNum = 20;
+    private int missileMaxNum = 25;
 
     [SerializeField]
     private GameObject defaultMisPrefab0;
@@ -45,9 +45,10 @@ public class MissileGenerator : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        
-        defaultNum = Random.Range(0, 2);
-        defaultMisArr[0] = defaultMisPrefab0;
+
+        defaultNum = 1;
+        // 파이어볼은 느리다. ( why ? )
+        //defaultMisArr[0] = defaultMisPrefab0;
         defaultMisArr[1] = defaultMisPrefab1;
 
         missileList = new List<GameObject>();
@@ -109,7 +110,7 @@ public class MissileGenerator : MonoBehaviour {
                     sfx.PlayDelayed(0.35f);
                 }
 
-            yield return new WaitForSeconds(0.25f);
+            yield return null;
         }
     }
 
@@ -126,32 +127,6 @@ public class MissileGenerator : MonoBehaviour {
         if (isStartLevel1 == true) return;
 
         int elementNum = 0;
-        int homingMisNum = 1;
-        for (int idx = 0; idx < homingMisNum; idx++)
-        {
-            elementNum = Random.Range(0, 20);
-            GameObject deleteObj = missileList[elementNum];
-            DestroyImmediate(deleteObj);
-            GameObject createObj = Instantiate(homingMisSlow,
-                Vector3.zero,
-                Quaternion.identity) as GameObject;
-            missileList[elementNum] = createObj;
-            missileList[elementNum].transform.position = homingPosGroup[Random.Range(0, homingPosGroupLength)].position;
-
-
-            EffectSettings settings = missileList[elementNum].GetComponent<EffectSettings>();
-            settings.MoveSpeed = 2.0f;
-            settings.Target = targetPlayer;
-            
-        }
-        isStartLevel1 = true;
-    }
-    bool isStartLevel2 = false;
-    public void StartLevel2()
-    {
-        if (isStartLevel2 == true) return;
-
-        int elementNum = 0;
         int homingMisNum = 3;
         for (int idx = 0; idx < homingMisNum; idx++)
         {
@@ -164,8 +139,34 @@ public class MissileGenerator : MonoBehaviour {
             missileList[elementNum] = createObj;
             missileList[elementNum].transform.position = homingPosGroup[Random.Range(0, homingPosGroupLength)].position;
 
+
             EffectSettings settings = missileList[elementNum].GetComponent<EffectSettings>();
-            settings.MoveSpeed = Random.Range(2.3f, 3.7f);
+            settings.MoveSpeed = 3.85f;
+            settings.Target = targetPlayer;
+            
+        }
+        isStartLevel1 = true;
+    }
+    bool isStartLevel2 = false;
+    public void StartLevel2()
+    {
+        if (isStartLevel2 == true) return;
+
+        int elementNum = 0;
+        int homingMisNum = 4;
+        for (int idx = 0; idx < homingMisNum; idx++)
+        {
+            elementNum = Random.Range(0, 20);
+            GameObject deleteObj = missileList[elementNum];
+            DestroyImmediate(deleteObj);
+            GameObject createObj = Instantiate(homingMisSlow,
+                Vector3.zero,
+                Quaternion.identity) as GameObject;
+            missileList[elementNum] = createObj;
+            missileList[elementNum].transform.position = homingPosGroup[Random.Range(0, homingPosGroupLength)].position;
+
+            EffectSettings settings = missileList[elementNum].GetComponent<EffectSettings>();
+            settings.MoveSpeed = Random.Range(3.85f, 4.0f);
             settings.Target = targetPlayer;
 
         }
@@ -181,18 +182,18 @@ public class MissileGenerator : MonoBehaviour {
             EffectSettings settings = missileList[idx].GetComponent<EffectSettings>();
             if(missileList[idx].gameObject.tag.Equals("DefaultMissile"))
             {
-                settings.MoveSpeed = Random.RandomRange(7.0f, 10.5f);
+                settings.MoveSpeed = Random.RandomRange(9.0f, 11.5f);
                 settings.gameObject.transform.localScale = new Vector3(3.5f, 3.5f, 3.5f);
             }
             else if(missileList[idx].gameObject.tag.Equals("homingMis_slow"))
             {
-                settings.MoveSpeed = Random.RandomRange(3.7f, 3.95f);
+                settings.MoveSpeed = Random.RandomRange(3.9f, 4.15f);
             }
             
         }
 
         int elementNum = 0;
-        int homingMisNum = 6;
+        int homingMisNum = 5;
         for (int idx = 0; idx < homingMisNum; idx++)
         {
             elementNum = Random.Range(0, 20);
@@ -205,12 +206,54 @@ public class MissileGenerator : MonoBehaviour {
             missileList[elementNum].transform.position = homingPosGroup[Random.Range(0, homingPosGroupLength)].position;
 
             EffectSettings settings = missileList[elementNum].GetComponent<EffectSettings>();
-            settings.MoveSpeed = Random.Range(3.6f, 4.1f);
+            settings.MoveSpeed = Random.Range(4.1f, 4.25f);
             settings.Target = targetPlayer;
 
         }
 
         isStartLevel3 = true;
+    }
+
+    bool isStartLevel4 = false;
+    public void StartLevel4()
+    {
+        if (isStartLevel4 == true) return;
+
+        for (int idx = 0; idx < missileMaxNum; ++idx)
+        {
+            EffectSettings settings = missileList[idx].GetComponent<EffectSettings>();
+            if (missileList[idx].gameObject.tag.Equals("DefaultMissile"))
+            {
+                settings.MoveSpeed = Random.RandomRange(8.0f, 11.5f);
+                settings.gameObject.transform.localScale = new Vector3(3.5f, 3.5f, 3.5f);
+            }
+            else if (missileList[idx].gameObject.tag.Equals("homingMis_slow"))
+            {
+                settings.MoveSpeed = Random.RandomRange(4.1f, 4.15f);
+            }
+
+        }
+
+        int elementNum = 0;
+        int homingMisNum = 3;
+        for (int idx = 0; idx < homingMisNum; idx++)
+        {
+            elementNum = Random.Range(0, 20);
+            GameObject deleteObj = missileList[elementNum];
+            DestroyImmediate(deleteObj);
+            GameObject createObj = Instantiate(homingMisNormal,
+                Vector3.zero,
+                Quaternion.identity) as GameObject;
+            missileList[elementNum] = createObj;
+            missileList[elementNum].transform.position = homingPosGroup[Random.Range(0, homingPosGroupLength)].position;
+
+            EffectSettings settings = missileList[elementNum].GetComponent<EffectSettings>();
+            settings.MoveSpeed = Random.Range(4.25f, 4.31f);
+            settings.Target = targetPlayer;
+
+        }
+
+        isStartLevel4 = true;
     }
 
 

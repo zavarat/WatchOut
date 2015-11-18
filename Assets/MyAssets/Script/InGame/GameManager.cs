@@ -73,15 +73,17 @@ public class GameManager : MonoBehaviour {
     IEnumerator GameLevelController()
     {
         int curGameTimeSec = gameTimer.GetGameTimeInfo().GetSeconds();
+        int curGameTimeMin = gameTimer.GetGameTimeInfo().GetMinutes();
         while(true)
         {
-            if (curGameTimeSec == 20) CreateItem30sec();
+            if (curGameTimeSec == 30) CreateItem30sec();
             if (curGameTimeSec == 46) CreateItem46sec();
 
-            if (curGameTimeSec == 1) { StartLevel1(); }
-            else if (curGameTimeSec == 3) { StartLevel2(); }
-            else if (curGameTimeSec == 5) { StartLevel3(); }
+            if (curGameTimeSec == 6) { StartLevel1(); }
+            else if (curGameTimeSec == 13) { StartLevel2(); }
+            else if (curGameTimeSec == 33) { StartLevel3(); }
 
+            if (curGameTimeMin == 1) { StartLevel4(); }
             
 
             curGameTimeSec = gameTimer.GetGameTimeInfo().GetSeconds();
@@ -105,7 +107,7 @@ public class GameManager : MonoBehaviour {
     {
         if (isLevel1Start == true) return;
 
-        gameMsgManager.StartMsg("[F3F625]Diffculty 1 Up!");
+        gameMsgManager.StartMsg("[F3F625]Difficulty 1 Up!");
         misGenerator.StartLevel1();
 
         isLevel1Start = true;
@@ -115,7 +117,7 @@ public class GameManager : MonoBehaviour {
     {
         if (isLevel2Start == true) return;
 
-        gameMsgManager.StartMsg("[F3F625]Diffculty 2 Up!");
+        gameMsgManager.StartMsg("[F3F625]Difficulty 2 Up!");
         misGenerator.StartLevel2();
 
         isLevel2Start = true;
@@ -125,10 +127,20 @@ public class GameManager : MonoBehaviour {
     {
         if (isLevel3Start == true) return;
 
-        gameMsgManager.StartMsg("[F3F625]Diffculty 3 Up!");
+        gameMsgManager.StartMsg("[F3F625]Difficulty 3 Up!");
         misGenerator.StartLevel3();
 
         isLevel3Start = true;
+    }
+    bool isLevel4Start = false;
+    private void StartLevel4()
+    {
+        if (isLevel4Start == true) return;
+
+        gameMsgManager.StartMsg("[F3F625]Final Difficulty!!");
+        misGenerator.StartLevel4();
+
+        isLevel4Start = true;
     }
 
 

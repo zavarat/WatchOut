@@ -40,9 +40,7 @@ public class MenuManager : MonoBehaviour {
 
     public void StartGame()
     {
-        mapNum = Random.Range(0, 6);
-        //Application.LoadLevelAsync("InGame_Map" + mapNum);
-        Application.LoadLevelAsync("InGame_Map0");
+        Application.LoadLevelAsync("Loading");
     }
 }
 

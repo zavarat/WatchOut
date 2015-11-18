@@ -26,9 +26,13 @@ public class PlayerItemManager : MonoBehaviour {
     [SerializeField]
     private PlayerBuff playerBuff;
 
+    
+    private TestJoyStick playerSpeedControl;
+
 	// Use this for initialization
 	void Start () {
-	
+
+        playerSpeedControl = gameObject.GetComponent<TestJoyStick>();
 	}
 
     
@@ -49,6 +53,7 @@ public class PlayerItemManager : MonoBehaviour {
             else
             {
                 playerBuff.OnSprintBuff();
+                playerSpeedControl.SetPlayerSpeed(6.0f);
                 obj_sprint.SetActive(true);
                 StartCoroutine(CountRemainSprintTime());
                 // bool value change first
@@ -93,6 +98,7 @@ public class PlayerItemManager : MonoBehaviour {
                 isSprintOn = false;
                 obj_sprint.SetActive(false);
                 playerBuff.OffSprintBuff();
+                playerSpeedControl.SetPlayerSpeed(4.5f);
                 break;
             }
         }

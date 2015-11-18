@@ -131,7 +131,7 @@ public class GameTimer : MonoBehaviour
             lbl_gameTimer.text = gameTime.ToStringType();
 
             int sec = gameTime.GetSeconds();
-            if ( (sec.Equals(0)) && ((sec % SEC_ANIMATE).Equals(0)) ) StartCoroutine(LblAnimaition());
+            if ((sec % SEC_ANIMATE).Equals(0)) StartCoroutine(LblAnimaition());
 
             yield return new WaitForSeconds(0.0001f);
         }

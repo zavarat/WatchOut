@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-//using UnityEngine.Advertisements;
+using UnityEngine.Advertisements;
 using System.Collections;
 using System.IO;
 
@@ -33,8 +33,8 @@ public class UI_Menu : MonoBehaviour {
     private UILabel lbl_lastRecord;
 
     // gameOver popup -> 다른 collider는 false ( 임시코드).
-    //[SerializeField]
-    //private BoxCollider col_joyStick;
+    [SerializeField]
+    private BoxCollider col_joyStick;
     [SerializeField]
     private BoxCollider col_jump;
     [SerializeField]
@@ -51,9 +51,6 @@ public class UI_Menu : MonoBehaviour {
 
     [SerializeField]
     private PlayerBuff playerBuffController;
-
-    [SerializeField]
-    private TestJoyStick playerJoyStick;
 
     bool isOnSfx = true;
     public void OnOffSfx()
@@ -90,7 +87,6 @@ public class UI_Menu : MonoBehaviour {
 
     public void OpenMenu()
     {
-        playerJoyStick.SetIsGameStop(true);
 
         playerBuffController.OnNoEnemyBuff();
 
@@ -103,56 +99,50 @@ public class UI_Menu : MonoBehaviour {
     }
     public void CloseMenu()
     {
-        playerJoyStick.SetIsGameStop(false);
-
         menuObj.SetActive(false);
         isFlickering = false;
 
         playerBuffController.OffNoEnemyBuff();
     }
 
-    // - 광고 막고 그냥 종료하는걸로...
     //게임 종료시 unity ads 를 보여주고 나서 종료.
     public void ExitGame()
     {
-        //ShowUnityAds();
-        Application.Quit();
+        ShowUnityAds();
     }
 
-    //// 유니티광고를 보여주는 method.
-    //public void ShowUnityAds()
-    //{
-    //    if (Advertisement.IsReady())
-    //    {
-    //        var options = new ShowOptions { resultCallback = HandleEndGameShowAds };
-    //        Advertisement.Show("video", options);
-    //    }
-    //}
-    //// unity-ads Show Result Call back
-    //private void HandleEndGameShowAds(ShowResult result)
-    //{
-    //    switch (result)
-    //    {
-    //        case ShowResult.Finished:
-    //            //Debug.Log("The ad was successfully shown.");
-    //            Application.Quit();
-    //            break;
-    //        case ShowResult.Skipped:
-    //            //Debug.Log("The ad was skipped before reaching the end.");
-    //            Application.Quit();
-    //            break;
-    //        case ShowResult.Failed:
-    //            //Debug.LogError("The ad failed to be shown.");
-    //            Application.Quit();
-    //            break;
-    //    }
-    //}
+    // 유니티광고를 보여주는 method.
+    public void ShowUnityAds()
+    {
+        if (Advertisement.IsReady())
+        {
+            var options = new ShowOptions { resultCallback = HandleEndGameShowAds };
+            Advertisement.Show("video", options);
+        }
+    }
+    // unity-ads Show Result Call back
+    private void HandleEndGameShowAds(ShowResult result)
+    {
+        switch (result)
+        {
+            case ShowResult.Finished:
+                //Debug.Log("The ad was successfully shown.");
+                Application.Quit();
+                break;
+            case ShowResult.Skipped:
+                //Debug.Log("The ad was skipped before reaching the end.");
+                Application.Quit();
+                break;
+            case ShowResult.Failed:
+                //Debug.LogError("The ad failed to be shown.");
+                Application.Quit();
+                break;
+        }
+    }
 
     public void OpenGameOver()
     {
-        playerJoyStick.SetIsGameStop(true);
-
-        //col_joyStick.enabled = false;
+        col_joyStick.enabled = false;
         col_jump.enabled = false;
         col_menuPop.enabled = false;
 
@@ -193,8 +183,6 @@ public class UI_Menu : MonoBehaviour {
 
     public void GoToMainMenu()
     {
-        playerJoyStick.SetIsGameStop(false);
-
         isFlickering = false;
         GameObject skydomeObj = GameObject.FindGameObjectWithTag("SkyDome");
         DestroyImmediate(skydomeObj);

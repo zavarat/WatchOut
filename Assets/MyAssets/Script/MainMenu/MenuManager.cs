@@ -36,23 +36,11 @@ public class MenuManager : MonoBehaviour {
 
         Instantiate(factedDomeSkies[domeSkyNum], new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         PlayerPrefs.SetInt("domeSkyNum", domeSkyNum);
-
-        StartCoroutine(ExitProcess());
     }
 
     public void StartGame()
     {
         Application.LoadLevelAsync("Loading");
-    }
-
-    IEnumerator ExitProcess()
-    {
-        while(true)
-        {
-            if ((Application.platform == RuntimePlatform.Android) && (Input.GetKey(KeyCode.Escape)))
-                Application.Quit();
-            yield return new WaitForSeconds(0.25f);
-        }
     }
 }
 

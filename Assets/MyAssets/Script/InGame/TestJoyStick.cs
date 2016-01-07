@@ -7,10 +7,10 @@ public class TestJoyStick : MonoBehaviour {
     private Rigidbody playerRb;
     [SerializeField]
     private GameObject playerObject;
-    //[SerializeField]
-    //private GameObject joyStick_Back;
-    //[SerializeField]
-    //private GameObject joyStick_Front;
+    [SerializeField]
+    private GameObject joyStick_Back;
+    [SerializeField]
+    private GameObject joyStick_Front;
     [SerializeField]
     private Camera ui_Camera;
 
@@ -31,14 +31,12 @@ public class TestJoyStick : MonoBehaviour {
     
     private bool isPlayerGround;
 
-    private bool isGameStop = false;
-    public void SetIsGameStop(bool _flag) { isGameStop = _flag; }
     
 
 	void Start () 
     {
-        //originJoyStickPos = joyStick_Front.transform.position;
-       // backJoyStick_center = ui_Camera.WorldToScreenPoint(joyStick_Back.transform.position);
+        originJoyStickPos = joyStick_Front.transform.position;
+        backJoyStick_center = ui_Camera.WorldToScreenPoint(joyStick_Back.transform.position);
 
         playerAnimator = gameObject.GetComponent<Animator>();
 
@@ -48,12 +46,7 @@ public class TestJoyStick : MonoBehaviour {
 
 	void FixedUpdate () 
     {
-        //키입력시 종료에 대한 부분은 update문으로 해야할듯싶은데, 따로 만들어서 update문을 실행시키는건 cpu낭비가..
-        //이 부분은 임시코드 -- ( 사용자가 인게임중에 back-key 입력시 종료.)
-        if ((Application.platform == RuntimePlatform.Android) &&  (Input.GetKey(KeyCode.Escape)))
-            Application.Quit();
 
-        if (isGameStop == true) return;
         if (Input.touchCount == 0) return;
 
         screenToTouch = ui_Camera.ScreenPointToRay(Input.GetTouch(0).position);
@@ -68,30 +61,28 @@ public class TestJoyStick : MonoBehaviour {
             case TouchPhase.Moved:
                 {
                     playerAnimator.SetBool("playerRunStop", false);
-                    //endTouchPos = Input.GetTouch(0).position;
-                    //TrackingTouchPoint(endTouchPos);
+                    endTouchPos = Input.GetTouch(0).position;
+                    TrackingTouchPoint(endTouchPos);
                     MoveChacracter();
                 }
                 break;
             case TouchPhase.Stationary:
                 {
                     playerAnimator.SetBool("playerRunStop", false);
-                    //endTouchPos = Input.GetTouch(0).position;
-                    //TrackingTouchPoint(endTouchPos);
                     MoveChacracter();
                 }
                 break;
 
             case TouchPhase.Ended:
                 {
-                    //endTouchPos = Input.GetTouch(0).position;
-                    //joyStick_Front.transform.position = originJoyStickPos;
+                    endTouchPos = Input.GetTouch(0).position;
+                    joyStick_Front.transform.position = originJoyStickPos;
                     playerAnimator.SetBool("playerRunStop", true);
                 }
                 break;
             case TouchPhase.Canceled:
                 {
-                    //joyStick_Front.transform.position = originJoyStickPos;
+                    joyStick_Front.transform.position = originJoyStickPos;
                     playerAnimator.SetBool("playerRunStop", true);
                 }
                 break;
@@ -124,17 +115,16 @@ public class TestJoyStick : MonoBehaviour {
     ///  joystick tracking touched point
     /// </summary>
     /// <param name="_touchPosition"></param>
-    //private void TrackingTouchPoint(Vector2 _touchPosition)
-    //{
-    //    if ((Physics.Raycast(screenToTouch, out rayCastHit)) &&
-    //        (rayCastHit.collider.gameObject.CompareTag("JoyStick_Back")))
-    //    {
-    //        Vector3 endPos = ui_Camera.ScreenToWorldPoint(_touchPosition);
-    //        joyStick_Front.transform.position = Vector3.Lerp(joyStick_Front.transform.position, endPos, 0.5f);
-    //    }
-    //}
+    private void TrackingTouchPoint(Vector2 _touchPosition)
+    {
+        if ((Physics.Raycast(screenToTouch, out rayCastHit)) &&
+            (rayCastHit.collider.gameObject.CompareTag("JoyStick_Back")))
+        {
+            Vector3 endPos = ui_Camera.ScreenToWorldPoint(_touchPosition);
+            joyStick_Front.transform.position = Vector3.Lerp(joyStick_Front.transform.position, endPos, 0.5f);
+        }
+    }
 
-    // test Rot
     private void TestRotation(Vector3 _dirVector)
     {
         Quaternion rotationDir = Quaternion.LookRotation(_dirVector, transform.up);
@@ -145,13 +135,63 @@ public class TestJoyStick : MonoBehaviour {
     private void MoveChacracter()
     {
         if ((Physics.Raycast(screenToTouch, out rayCastHit)) &&
-            (rayCastHit.collider.gameObject.CompareTag("JumpButton"))) return;
-           
-        Vector3 dirVector = playerObject.transform.forward;
-        RotationCharacter();
-
-        if (isPlayerGround == true) playerAnimator.Play("Running@loop", 0);
-        playerRb.MovePosition(playerObject.transform.position + dirVector * Time.deltaTime * moveSpeed);
+            (rayCastHit.collider.gameObject.CompareTag("JoyStick_Back")))
+        {
+            Vector3 dirVector = Vector3.zero;
+            float angle = GetBetweenAngle();
+            //debug-test code
+            if(((angle >= 0.0f) && (angle < 15.0f)) || ((angle <= 0.0f) && (angle > 345.0f)))
+            {
+                //EAST direction
+                //dirVector = playerObject.transform.right;
+                dirVector = playerObject.transform.right;
+                TestRotation(dirVector);
+            }
+            else if ((angle >= 15.0f) && (angle < 75.0f))
+            {
+                // North East direction
+                dirVector = playerObject.transform.right + playerObject.transform.forward;
+                TestRotation(dirVector);
+            }
+            else if ((angle >= 75.0f) && (angle < 105.0f))
+            {
+                // North direction
+                dirVector = playerObject.transform.forward;
+                TestRotation(dirVector);
+            }
+            else if ((angle >= 105.0f) && (angle < 165.0f))
+            {
+                // North West direction
+                dirVector = (-playerObject.transform.right) + playerObject.transform.forward;
+                TestRotation(dirVector);
+            }
+            else if(((angle >= 180.0f) && (angle < 195.0f)) || ((angle <= 180.0f) && (angle > 165.0f)))
+            {
+                // West direction
+                dirVector = -playerObject.transform.right;
+                TestRotation(dirVector);
+            }
+            else if ((angle >= 195.0f) && (angle < 265.0f))
+            {
+                // South West direction
+                dirVector = (-playerObject.transform.right) + (-playerObject.transform.forward);
+                TestRotation(dirVector);
+            }
+            else if ((angle >= 265.0f) && (angle < 295.0f))
+            {
+                //South direction
+                dirVector = -playerObject.transform.forward;
+                TestRotation(dirVector);
+            }
+            else if ((angle >= 295.0f) && (angle < 360.0f))
+            {
+                //South East direction
+                dirVector = playerObject.transform.right + (-playerObject.transform.forward);
+                TestRotation(dirVector);
+            }
+            if (isPlayerGround == true) playerAnimator.Play("Running@loop", 0);
+            playerRb.MovePosition(playerObject.transform.position + dirVector *Time.deltaTime * moveSpeed);
+        }
     }
 
     private void RotationCharacter()

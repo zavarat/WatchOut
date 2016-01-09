@@ -19,7 +19,9 @@ public class UI_Menu : MonoBehaviour {
     [SerializeField]
     private UISprite spr_gameOverBg;
     [SerializeField]
-    private UISprite spr_backToMenuBg;
+    private UISprite spr_home;
+    [SerializeField]
+    private UISprite spr_ReStart;
 
     private bool isFlickering = true;
 
@@ -108,37 +110,37 @@ public class UI_Menu : MonoBehaviour {
     //게임 종료시 unity ads 를 보여주고 나서 종료.
     public void ExitGame()
     {
-        ShowUnityAds();
+        //ShowUnityAds();
     }
 
-    // 유니티광고를 보여주는 method.
-    public void ShowUnityAds()
-    {
-        if (Advertisement.IsReady())
-        {
-            var options = new ShowOptions { resultCallback = HandleEndGameShowAds };
-            Advertisement.Show("video", options);
-        }
-    }
-    // unity-ads Show Result Call back
-    private void HandleEndGameShowAds(ShowResult result)
-    {
-        switch (result)
-        {
-            case ShowResult.Finished:
-                //Debug.Log("The ad was successfully shown.");
-                Application.Quit();
-                break;
-            case ShowResult.Skipped:
-                //Debug.Log("The ad was skipped before reaching the end.");
-                Application.Quit();
-                break;
-            case ShowResult.Failed:
-                //Debug.LogError("The ad failed to be shown.");
-                Application.Quit();
-                break;
-        }
-    }
+    //// 유니티광고를 보여주는 method.
+    //public void ShowUnityAds()
+    //{
+    //    if (Advertisement.IsReady())
+    //    {
+    //        var options = new ShowOptions { resultCallback = HandleEndGameShowAds };
+    //        Advertisement.Show("video", options);
+    //    }
+    //}
+    //// unity-ads Show Result Call back
+    //private void HandleEndGameShowAds(ShowResult result)
+    //{
+    //    switch (result)
+    //    {
+    //        case ShowResult.Finished:
+    //            //Debug.Log("The ad was successfully shown.");
+    //            Application.Quit();
+    //            break;
+    //        case ShowResult.Skipped:
+    //            //Debug.Log("The ad was skipped before reaching the end.");
+    //            Application.Quit();
+    //            break;
+    //        case ShowResult.Failed:
+    //            //Debug.LogError("The ad failed to be shown.");
+    //            Application.Quit();
+    //            break;
+    //    }
+    //}
 
     public void OpenGameOver()
     {
@@ -178,7 +180,8 @@ public class UI_Menu : MonoBehaviour {
         spr_gameOverBg.alpha = 0.7f;
 
         isFlickering = true;
-        StartCoroutine(FlickeringSprite(spr_backToMenuBg));
+        StartCoroutine(FlickeringSprite(spr_home));
+        StartCoroutine(FlickeringSprite(spr_ReStart));
     }
 
     public void GoToMainMenu()
@@ -188,6 +191,14 @@ public class UI_Menu : MonoBehaviour {
         DestroyImmediate(skydomeObj);
 
         Application.LoadLevelAsync("MainMenu");
+    }
+    public void ReStart()
+    {
+        isFlickering = false;
+        GameObject skydomeObj = GameObject.FindGameObjectWithTag("SkyDome");
+        DestroyImmediate(skydomeObj);
+
+        Application.LoadLevelAsync(Application.loadedLevel);
     }
 
     IEnumerator FlickeringSprite(UISprite _spr)
